@@ -44,3 +44,13 @@ func (bc *BaseClient) GetTransactionByHash(txHash string) (*types.Transaction, b
 	}
 	return tx, isPending, nil
 }
+
+// GetBalance returns the ETH balance of the given address
+func (bc *BaseClient) GetBalance(address string) (*big.Int, error) {
+	addr := common.HexToAddress(address)
+	balance, err := bc.Client.BalanceAt(context.Background(), addr, nil)
+	if err != nil {
+		return nil, err
+	}
+	return balance, nil
+}
