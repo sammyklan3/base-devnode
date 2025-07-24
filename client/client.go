@@ -5,6 +5,8 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 )
 
 type BaseClient struct {
@@ -31,4 +33,14 @@ func (bc *BaseClient) GetLatestBlockNumber() (*big.Int, error) {
 		return nil, err
 	}
 	return header.Number, nil
+}
+
+// GetTransactionByHash fetches a transaction and its receipt by hash
+func (bc *BaseClient) GetTransactionByHash(txHash string) (*types.Transaction, bool, error) {
+	hash := common.HexToHash(txHash)
+	tx, isPending, err := bc.Client.TransactionByHash(context.Background(), hash)
+	if err != nil {
+		return nil, false, err
+	}
+	return tx, isPending, nil
 }
