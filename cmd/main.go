@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/sammyklan3/base-devnode/client"
+	"base-devnode/client"
 )
 
 func main() {
