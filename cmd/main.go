@@ -8,16 +8,16 @@ import (
 )
 
 func main() {
-	rpc := "https://mainnet.base.org"
+	rpc := "https://rpc.scroll.io"
 
 	cli, err := client.NewBaseClient(rpc)
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
 
-	balance, err := cli.GetBalance("0x89aeE487218f9e0f986c30445A9B7ebE135c1029")
+	chain, err := cli.GetChainID()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to get chain ID: %v", err)
 	}
-	fmt.Printf("💰 Balance in wei: %s\n", balance.String())
+	fmt.Printf("Connected to chain ID: %s\n", chain.String())
 }

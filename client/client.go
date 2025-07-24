@@ -54,3 +54,12 @@ func (bc *BaseClient) GetBalance(address string) (*big.Int, error) {
 	}
 	return balance, nil
 }
+
+// GetChainID returns the chain ID of the connected Ethereum network
+func (bc *BaseClient) GetChainID() (*big.Int, error) {
+	chainID, err := bc.Client.ChainID(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return chainID, nil
+}
