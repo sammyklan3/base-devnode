@@ -82,3 +82,18 @@ func (bc *BaseClient) GetBlockByHash(blockHash string) (*types.Block, error) {
 	}
 	return block, nil
 }
+
+// SendRawTransaction broadcasts a pre-signed raw transaction to the network
+func (bc *BaseClient) SendRawTransaction(rawTxHex string) (string, error) {
+	var txHash common.Hash
+	err := bc.Client.Client().CallContext(
+		context.Background(),
+		&txHash,
+		"eth_sendRawTransaction",
+		rawTxHex,
+	)
+	if err != nil {
+		return "", err
+	}
+	return txHash.Hex(), nil
+}
