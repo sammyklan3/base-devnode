@@ -72,3 +72,13 @@ func (bc *BaseClient) GetBlockByNumber(blockNumber *big.Int) (*types.Block, erro
 	}
 	return block, nil
 }
+
+// GetBlockByHash fetches the block for the given hash
+func (bc *BaseClient) GetBlockByHash(blockHash string) (*types.Block, error) {
+	hash := common.HexToHash(blockHash)
+	block, err := bc.Client.BlockByHash(context.Background(), hash)
+	if err != nil {
+		return nil, err
+	}
+	return block, nil
+}
