@@ -4,9 +4,10 @@ import (
 	"context"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type BaseClient struct {
@@ -116,4 +117,13 @@ func (bc *BaseClient) GetNonce(address string) (uint64, error) {
 		return 0, err
 	}
 	return nonce, nil
+}
+
+// EstimateGas estimates the gas required for a transaction
+func (bc *BaseClient) EstimateGas(msg ethereum.CallMsg) (uint64, error) {
+	gas, err := bc.Client.EstimateGas(context.Background(), msg)
+	if err != nil {
+		return 0, err
+	}
+	return gas, nil
 }
