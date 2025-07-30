@@ -63,3 +63,12 @@ func (bc *BaseClient) GetChainID() (*big.Int, error) {
 	}
 	return chainID, nil
 }
+
+// GetBlockByNumber fetches the block for the given number
+func (bc *BaseClient) GetBlockByNumber(blockNumber *big.Int) (*types.Block, error) {
+	block, err := bc.Client.BlockByNumber(context.Background(), blockNumber)
+	if err != nil {
+		return nil, err
+	}
+	return block, nil
+}
