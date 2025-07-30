@@ -82,3 +82,38 @@ func (bc *BaseClient) GetBlockByHash(blockHash string) (*types.Block, error) {
 	}
 	return block, nil
 }
+
+// SendRawTransaction broadcasts a pre-signed raw transaction to the network
+func (bc *BaseClient) SendRawTransaction(rawTxHex string) (string, error) {
+	var txHash common.Hash
+	err := bc.Client.Client().CallContext(
+		context.Background(),
+		&txHash,
+		"eth_sendRawTransaction",
+		rawTxHex,
+	)
+	if err != nil {
+		return "", err
+	}
+	return txHash.Hex(), nil
+}
+
+// GetTransactionReceipt fetches the receipt of a transaction by its hash
+func (bc *BaseClient) GetTransactionReceipt(txHash string) (*types.Receipt, error) {
+	hash := common.HexToHash(txHash)
+	receipt, err := bc.Client.TransactionReceipt(context.Background(), hash)
+	if err != nil {
+		return nil, err
+	}
+	return receipt, nil
+}
+
+// GetNonce returns the nonce for the given address
+func (bc *BaseClient) GetNonce(address string) (uint64, error) {
+	addr := common.HexToAddress(address)
+	nonce, err := bc.Client.NonceAt(context.Background(), addr, nil)
+	if err != nil {
+		return 0, err
+	}
+	return nonce, nil
+}

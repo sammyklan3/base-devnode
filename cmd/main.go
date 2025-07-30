@@ -15,14 +15,12 @@ func main() {
 		log.Fatalf("Failed to connect: %v", err)
 	}
 
-	blockHash := "0x08322071401b3a69b00a956560393c57beaac47c7dad5adc2feae8b8f13cc253"
+	signedTxHex := "0xf86b808504a817c80082520894f1d...etc"
 
-	block, err := cli.GetBlockByHash(blockHash)
+	txHash, err := cli.SendRawTransaction(signedTxHex)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Broadcast failed:", err)
 	}
 
-	fmt.Printf("Block Number: %s\n", block.Number().String())
-	fmt.Printf("Block Hash: %s\n", block.Hash().Hex())
-	fmt.Printf("Block Transactions: %d\n", len(block.Transactions()))
+	fmt.Println("Transaction broadcasted! Hash:", txHash)
 }
