@@ -97,3 +97,13 @@ func (bc *BaseClient) SendRawTransaction(rawTxHex string) (string, error) {
 	}
 	return txHash.Hex(), nil
 }
+
+// GetTransactionReceipt fetches the receipt of a transaction by its hash
+func (bc *BaseClient) GetTransactionReceipt(txHash string) (*types.Receipt, error) {
+	hash := common.HexToHash(txHash)
+	receipt, err := bc.Client.TransactionReceipt(context.Background(), hash)
+	if err != nil {
+		return nil, err
+	}
+	return receipt, nil
+}
