@@ -107,3 +107,13 @@ func (bc *BaseClient) GetTransactionReceipt(txHash string) (*types.Receipt, erro
 	}
 	return receipt, nil
 }
+
+// GetNonce returns the nonce for the given address
+func (bc *BaseClient) GetNonce(address string) (uint64, error) {
+	addr := common.HexToAddress(address)
+	nonce, err := bc.Client.NonceAt(context.Background(), addr, nil)
+	if err != nil {
+		return 0, err
+	}
+	return nonce, nil
+}
