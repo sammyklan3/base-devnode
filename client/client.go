@@ -119,7 +119,7 @@ func (bc *BaseClient) GetNonce(address string) (uint64, error) {
 	return nonce, nil
 }
 
-// EstimateGas estimates the gas required for a transaction
+// EstimateGas estimates the gas required for a transaction. Call this before sending txs to get a reliable gas estimate.
 func (bc *BaseClient) EstimateGas(msg ethereum.CallMsg) (uint64, error) {
 	gas, err := bc.Client.EstimateGas(context.Background(), msg)
 	if err != nil {
