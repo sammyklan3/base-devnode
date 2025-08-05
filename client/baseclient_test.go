@@ -70,7 +70,7 @@ func TestEstimateGas(t *testing.T) {
 		Data: nil,
 	}
 
-	gas, err := cli.EstimateGas(msg)
+	gas, err := cli.EstimateGas(context.Background(), msg)
 	assert.NoError(t, err)
 	assert.True(t, gas > 0)
 
