@@ -27,6 +27,10 @@ func NewBaseClient(rpcURL string) (*BaseClient, error) {
 	}, nil
 }
 
+func (bc *BaseClient) Close() {
+    bc.Client.Close()
+}
+
 // GetLatestBlockNumber fetches the latest block number
 func (bc *BaseClient) GetLatestBlockNumber(ctx context.Context) (*big.Int, error) {
 	header, err := bc.Client.HeaderByNumber(ctx, nil)
