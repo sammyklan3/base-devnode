@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"context"
 
 	"base-devnode/client"
 )
@@ -17,7 +18,7 @@ func main() {
 
 	signedTxHex := "0xf86b808504a817c80082520894f1d...etc"
 
-	txHash, err := cli.SendRawTransaction(signedTxHex)
+	txHash, err := cli.SendRawTransaction(context.Background(), signedTxHex)
 	if err != nil {
 		log.Fatal("Broadcast failed:", err)
 	}

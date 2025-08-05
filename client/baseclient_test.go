@@ -4,6 +4,7 @@ import (
 	"math/big"
 	"os"
 	"testing"
+	"context"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -28,7 +29,7 @@ func TestGetLatestBlockNumber(t *testing.T) {
 	cli, err := NewBaseClient(rpcURL)
 	assert.NoError(t, err)
 
-	number, err := cli.GetLatestBlockNumber()
+	number, err := cli.GetLatestBlockNumber(context.Background())
 	assert.NoError(t, err)
 	assert.True(t, number.Cmp(big.NewInt(0)) > 0)
 
@@ -40,7 +41,7 @@ func TestGetBalance(t *testing.T) {
 	assert.NoError(t, err)
 
 	addr := "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-	balance, err := cli.GetBalance(addr)
+	balance, err := cli.GetBalance(context.Background(), addr)
 	assert.NoError(t, err)
 	assert.NotNil(t, balance)
 
@@ -51,7 +52,7 @@ func TestGetChainID(t *testing.T) {
 	cli, err := NewBaseClient(rpcURL)
 	assert.NoError(t, err)
 
-	chainID, err := cli.GetChainID()
+	chainID, err := cli.GetChainID(context.Background())
 	assert.NoError(t, err)
 	assert.NotNil(t, chainID)
 
