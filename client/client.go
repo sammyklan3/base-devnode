@@ -135,3 +135,8 @@ func (bc *BaseClient) EstimateGas(ctx context.Context, msg ethereum.CallMsg) (ui
 	}
 	return gas, nil
 }
+
+// GetLogs retrieves logs based on the provided filter query
+func (bc *BaseClient) GetLogs(ctx context.Context, query ethereum.FilterQuery) ([]types.Log, error) {
+    return bc.Client.FilterLogs(ctx, query)
+}
