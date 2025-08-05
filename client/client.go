@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum"
@@ -28,7 +29,7 @@ func NewBaseClient(rpcURL string) (*BaseClient, error) {
 }
 
 func (bc *BaseClient) Close() {
-    bc.Client.Close()
+	bc.Client.Close()
 }
 
 // GetLatestBlockNumber fetches the latest block number
@@ -52,6 +53,9 @@ func (bc *BaseClient) GetTransactionByHash(ctx context.Context, txHash string) (
 
 // GetBalance returns the ETH balance of the given address
 func (bc *BaseClient) GetBalance(ctx context.Context, address string) (*big.Int, error) {
+	if !common.IsHexAddress(address) {
+		return nil, fmt.Errorf("invalid address: %s", address)
+	}
 	addr := common.HexToAddress(address)
 	balance, err := bc.Client.BalanceAt(ctx, addr, nil)
 	if err != nil {
