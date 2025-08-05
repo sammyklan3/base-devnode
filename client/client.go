@@ -140,3 +140,8 @@ func (bc *BaseClient) EstimateGas(ctx context.Context, msg ethereum.CallMsg) (ui
 func (bc *BaseClient) GetLogs(ctx context.Context, query ethereum.FilterQuery) ([]types.Log, error) {
     return bc.Client.FilterLogs(ctx, query)
 }
+
+// SubscribeNewHead subscribes to new block headers
+func (bc *BaseClient) SubscribeNewHead(ctx context.Context, ch chan *types.Header) (ethereum.Subscription, error) {
+    return bc.Client.SubscribeNewHead(ctx, ch)
+}
