@@ -28,8 +28,8 @@ func NewBaseClient(rpcURL string) (*BaseClient, error) {
 }
 
 // GetLatestBlockNumber fetches the latest block number
-func (bc *BaseClient) GetLatestBlockNumber() (*big.Int, error) {
-	header, err := bc.Client.HeaderByNumber(context.Background(), nil)
+func (bc *BaseClient) GetLatestBlockNumber(ctx context.Context) (*big.Int, error) {
+	header, err := bc.Client.HeaderByNumber(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -37,9 +37,9 @@ func (bc *BaseClient) GetLatestBlockNumber() (*big.Int, error) {
 }
 
 // GetTransactionByHash fetches a transaction and its receipt by hash
-func (bc *BaseClient) GetTransactionByHash(txHash string) (*types.Transaction, bool, error) {
+func (bc *BaseClient) GetTransactionByHash(ctx context.Context, txHash string) (*types.Transaction, bool, error) {
 	hash := common.HexToHash(txHash)
-	tx, isPending, err := bc.Client.TransactionByHash(context.Background(), hash)
+	tx, isPending, err := bc.Client.TransactionByHash(ctx, hash)
 	if err != nil {
 		return nil, false, err
 	}
@@ -47,9 +47,9 @@ func (bc *BaseClient) GetTransactionByHash(txHash string) (*types.Transaction, b
 }
 
 // GetBalance returns the ETH balance of the given address
-func (bc *BaseClient) GetBalance(address string) (*big.Int, error) {
+func (bc *BaseClient) GetBalance(ctx context.Context, address string) (*big.Int, error) {
 	addr := common.HexToAddress(address)
-	balance, err := bc.Client.BalanceAt(context.Background(), addr, nil)
+	balance, err := bc.Client.BalanceAt(ctx, addr, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func (bc *BaseClient) GetBalance(address string) (*big.Int, error) {
 }
 
 // GetChainID returns the chain ID of the connected Ethereum network
-func (bc *BaseClient) GetChainID() (*big.Int, error) {
-	chainID, err := bc.Client.ChainID(context.Background())
+func (bc *BaseClient) GetChainID(ctx context.Context) (*big.Int, error) {
+	chainID, err := bc.Client.ChainID(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -66,8 +66,8 @@ func (bc *BaseClient) GetChainID() (*big.Int, error) {
 }
 
 // GetBlockByNumber fetches the block for the given number
-func (bc *BaseClient) GetBlockByNumber(blockNumber *big.Int) (*types.Block, error) {
-	block, err := bc.Client.BlockByNumber(context.Background(), blockNumber)
+func (bc *BaseClient) GetBlockByNumber(ctx context.Context, blockNumber *big.Int) (*types.Block, error) {
+	block, err := bc.Client.BlockByNumber(ctx, blockNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +75,9 @@ func (bc *BaseClient) GetBlockByNumber(blockNumber *big.Int) (*types.Block, erro
 }
 
 // GetBlockByHash fetches the block for the given hash
-func (bc *BaseClient) GetBlockByHash(blockHash string) (*types.Block, error) {
+func (bc *BaseClient) GetBlockByHash(ctx context.Context, blockHash string) (*types.Block, error) {
 	hash := common.HexToHash(blockHash)
-	block, err := bc.Client.BlockByHash(context.Background(), hash)
+	block, err := bc.Client.BlockByHash(ctx, hash)
 	if err != nil {
 		return nil, err
 	}
@@ -85,10 +85,10 @@ func (bc *BaseClient) GetBlockByHash(blockHash string) (*types.Block, error) {
 }
 
 // SendRawTransaction broadcasts a pre-signed raw transaction to the network
-func (bc *BaseClient) SendRawTransaction(rawTxHex string) (string, error) {
+func (bc *BaseClient) SendRawTransaction(ctx context.Context, rawTxHex string) (string, error) {
 	var txHash common.Hash
 	err := bc.Client.Client().CallContext(
-		context.Background(),
+		ctx,
 		&txHash,
 		"eth_sendRawTransaction",
 		rawTxHex,
@@ -100,9 +100,9 @@ func (bc *BaseClient) SendRawTransaction(rawTxHex string) (string, error) {
 }
 
 // GetTransactionReceipt fetches the receipt of a transaction by its hash
-func (bc *BaseClient) GetTransactionReceipt(txHash string) (*types.Receipt, error) {
+func (bc *BaseClient) GetTransactionReceipt(ctx context.Context, txHash string) (*types.Receipt, error) {
 	hash := common.HexToHash(txHash)
-	receipt, err := bc.Client.TransactionReceipt(context.Background(), hash)
+	receipt, err := bc.Client.TransactionReceipt(ctx, hash)
 	if err != nil {
 		return nil, err
 	}
@@ -110,9 +110,9 @@ func (bc *BaseClient) GetTransactionReceipt(txHash string) (*types.Receipt, erro
 }
 
 // GetNonce returns the nonce for the given address
-func (bc *BaseClient) GetNonce(address string) (uint64, error) {
+func (bc *BaseClient) GetNonce(ctx context.Context, address string) (uint64, error) {
 	addr := common.HexToAddress(address)
-	nonce, err := bc.Client.NonceAt(context.Background(), addr, nil)
+	nonce, err := bc.Client.NonceAt(ctx, addr, nil)
 	if err != nil {
 		return 0, err
 	}
