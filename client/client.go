@@ -20,7 +20,7 @@ type BaseClient struct {
 func NewBaseClient(rpcURL string) (*BaseClient, error) {
 	client, err := ethclient.Dial(rpcURL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to Ethereum client: %w", err)
 	}
 	return &BaseClient{
 		RPCURL: rpcURL,
@@ -36,7 +36,7 @@ func (bc *BaseClient) Close() {
 func (bc *BaseClient) GetLatestBlockNumber(ctx context.Context) (*big.Int, error) {
 	header, err := bc.Client.HeaderByNumber(ctx, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get latest block number: %w", err)
 	}
 	return header.Number, nil
 }
@@ -46,7 +46,7 @@ func (bc *BaseClient) GetTransactionByHash(ctx context.Context, txHash string) (
 	hash := common.HexToHash(txHash)
 	tx, isPending, err := bc.Client.TransactionByHash(ctx, hash)
 	if err != nil {
-		return nil, false, err
+		return nil, false, fmt.Errorf("failed to get transaction: %w", err)
 	}
 	return tx, isPending, nil
 }
@@ -59,7 +59,7 @@ func (bc *BaseClient) GetBalance(ctx context.Context, address string) (*big.Int,
 	addr := common.HexToAddress(address)
 	balance, err := bc.Client.BalanceAt(ctx, addr, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get balance: %w", err)
 	}
 	return balance, nil
 }
@@ -77,7 +77,7 @@ func (bc *BaseClient) GetChainID(ctx context.Context) (*big.Int, error) {
 func (bc *BaseClient) GetBlockByNumber(ctx context.Context, blockNumber *big.Int) (*types.Block, error) {
 	block, err := bc.Client.BlockByNumber(ctx, blockNumber)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get block by number: %w", err)
 	}
 	return block, nil
 }
@@ -87,7 +87,7 @@ func (bc *BaseClient) GetBlockByHash(ctx context.Context, blockHash string) (*ty
 	hash := common.HexToHash(blockHash)
 	block, err := bc.Client.BlockByHash(ctx, hash)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get block by hash: %w", err)
 	}
 	return block, nil
 }
@@ -102,7 +102,7 @@ func (bc *BaseClient) SendRawTransaction(ctx context.Context, rawTxHex string) (
 		rawTxHex,
 	)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to send raw transaction: %w", err)
 	}
 	return txHash.Hex(), nil
 }
@@ -112,7 +112,7 @@ func (bc *BaseClient) GetTransactionReceipt(ctx context.Context, txHash string) 
 	hash := common.HexToHash(txHash)
 	receipt, err := bc.Client.TransactionReceipt(ctx, hash)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get transaction receipt: %w", err)
 	}
 	return receipt, nil
 }
@@ -122,16 +122,16 @@ func (bc *BaseClient) GetNonce(ctx context.Context, address string) (uint64, err
 	addr := common.HexToAddress(address)
 	nonce, err := bc.Client.NonceAt(ctx, addr, nil)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to get nonce: %w", err)
 	}
 	return nonce, nil
 }
 
 // EstimateGas estimates the gas required for a transaction. Call this before sending txs to get a reliable gas estimate.
-func (bc *BaseClient) EstimateGas(msg ethereum.CallMsg) (uint64, error) {
-	gas, err := bc.Client.EstimateGas(context.Background(), msg)
+func (bc *BaseClient) EstimateGas(ctx context.Context, msg ethereum.CallMsg) (uint64, error) {
+	gas, err := bc.Client.EstimateGas(ctx, msg)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to estimate gas: %w", err)
 	}
 	return gas, nil
 }
